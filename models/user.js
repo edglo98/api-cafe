@@ -33,4 +33,9 @@ const UserScheme = Schema({
   }
 })
 
+UserScheme.methods.toJSON = function () {
+  const { __v, password, ...user } = this.toObject()
+  return user
+}
+
 export default model('User', UserScheme)

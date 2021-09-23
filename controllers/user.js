@@ -1,7 +1,6 @@
 import { response } from 'express'
-import User from '../database/user.js'
+import User from '../models/user.js'
 import bcryptjs from 'bcryptjs'
-import { validationResult } from 'express-validator'
 
 export const getUser = (req, res = response) => {
   const { q = '' } = req.query
@@ -22,21 +21,8 @@ export const putUser = (req, res = response) => {
 }
 
 export const postUser = async (req, res = response) => {
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json(errors)
-  }
-
   const { name, email, password, rol } = req.body
   const user = new User({ name, email, password, rol })
-
-  const existeEmail = await User.findOne({ email })
-
-  if (existeEmail) {
-    return res.status(400).json({
-      msg: 'Email has already been taken'
-    })
-  }
 
   const salt = bcryptjs.genSaltSync() // tipo de encriptado
   user.password = bcryptjs.hashSync(password, salt) // metodo para encriptar
