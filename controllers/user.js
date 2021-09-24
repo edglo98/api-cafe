@@ -14,7 +14,7 @@ export const getUser = (req, res = response) => {
 export const putUser = async (req, res = response) => {
   const { id } = req.params
   // eslint-disable-next-line camelcase
-  const { password, google_auth, email, ...rest } = req.body
+  const { _id, password, google_auth, email, ...rest } = req.body
 
   if (password) {
     const salt = bcryptjs.genSaltSync() // tipo de encriptado

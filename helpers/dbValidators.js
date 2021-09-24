@@ -10,3 +10,8 @@ export const isEmailTaked = async (email) => {
   const existeEmail = await User.findOne({ email })
   if (existeEmail) throw new Error('Email has already been taken')
 }
+
+export const isIdOfUser = async (id) => {
+  const existeUser = await User.findById(id)
+  if (!existeUser) throw new Error(`Usuario no encontrado, verifique el id: ${id}`)
+}

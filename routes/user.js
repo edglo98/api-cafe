@@ -1,14 +1,18 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
 import { deleteUser, getUser, postUser, putUser } from '../controllers/user.js'
-import { isEmailTaked, isValidRole } from '../helpers/dbValidators.js'
+import { isEmailTaked, isIdOfUser, isValidRole } from '../helpers/dbValidators.js'
 import { validateReq } from '../middlewares/validateReq.js'
 
 const routerUser = Router()
 
 routerUser.get('/', getUser)
 
-routerUser.put('/:id', putUser)
+routerUser.put('/:id', [
+  check('id', 'No es un ID válido').isMongoId().custom(isIdOfUser),
+  check('rol').optional().custom(isValidRole),
+  validateReq
+], putUser)
 
 routerUser.post('/', [
   check('name', 'Nombre no valido o vacio.').not().isEmpty(),
