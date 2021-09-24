@@ -23,6 +23,9 @@ routerUser.post('/', [
   validateReq
 ], postUser)
 
-routerUser.delete('/', deleteUser)
+routerUser.delete('/:id', [
+  check('id', 'No es un ID válido').isMongoId().custom(isIdOfUser),
+  validateReq
+], deleteUser)
 
 export default routerUser

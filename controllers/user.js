@@ -4,12 +4,17 @@ import bcryptjs from 'bcryptjs'
 
 export const getUser = async (req, res = response) => {
   const { limit = 5, from = 0 } = req.query
+  const rules = { status: true }
 
-  const users = await User.find()
-    .skip(Number(from))
-    .limit(Number(limit))
+  const [total, users] = await Promise.all([
+    User.countDocuments(rules),
+    User.find(rules)
+      .skip(Number(from))
+      .limit(Number(limit))
+  ])
 
   res.json({
+    total,
     users
   })
 }
@@ -41,8 +46,10 @@ export const postUser = async (req, res = response) => {
   res.status(201).json(user)
 }
 
-export const deleteUser = (req, res = response) => {
-  res.json({
-    msg: 'delete api'
-  })
+export const deleteUser = async (req, res = response) => {
+  const { id } = req.params
+
+  const user = await User.findByIdAndUpdate(id, { status: false })
+
+  res.json(user)
 }
