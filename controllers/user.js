@@ -2,12 +2,15 @@ import { response } from 'express'
 import User from '../models/user.js'
 import bcryptjs from 'bcryptjs'
 
-export const getUser = (req, res = response) => {
-  const { q = '' } = req.query
+export const getUser = async (req, res = response) => {
+  const { limit = 5, from = 0 } = req.query
+
+  const users = await User.find()
+    .skip(Number(from))
+    .limit(Number(limit))
 
   res.json({
-    msg: 'get api',
-    q
+    users
   })
 }
 
@@ -23,10 +26,7 @@ export const putUser = async (req, res = response) => {
 
   const user = await User.findByIdAndUpdate(id, rest)
 
-  res.status(400).json({
-    msg: 'put api',
-    user
-  })
+  res.status(202).json(user)
 }
 
 export const postUser = async (req, res = response) => {
@@ -38,9 +38,7 @@ export const postUser = async (req, res = response) => {
 
   await user.save()
 
-  res.status(201).json({
-    user
-  })
+  res.status(201).json(user)
 }
 
 export const deleteUser = (req, res = response) => {
