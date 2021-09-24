@@ -11,12 +11,21 @@ export const getUser = (req, res = response) => {
   })
 }
 
-export const putUser = (req, res = response) => {
+export const putUser = async (req, res = response) => {
   const { id } = req.params
+  // eslint-disable-next-line camelcase
+  const { password, google_auth, email, ...rest } = req.body
+
+  if (password) {
+    const salt = bcryptjs.genSaltSync() // tipo de encriptado
+    rest.password = bcryptjs.hashSync(password, salt) // metodo para encriptar
+  }
+
+  const user = await User.findByIdAndUpdate(id, rest)
 
   res.status(400).json({
     msg: 'put api',
-    id
+    user
   })
 }
 
