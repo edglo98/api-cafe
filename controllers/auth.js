@@ -1,6 +1,7 @@
 import { response } from 'express'
 import User from '../models/user.js'
 import bcryptjs from 'bcryptjs'
+import { generateJWT } from '../helpers/generateJWT.js'
 export const login = async (req, res = response) => {
   const { email, password } = req.body
 
@@ -17,16 +18,19 @@ export const login = async (req, res = response) => {
         msg: 'Usuario desahabilitado.'
       })
     }
-    const validPassword = bcryptjs.compareSync(password, user.password)
 
+    const validPassword = bcryptjs.compareSync(password, user.password)
     if (!validPassword) {
       return res.status(400).json({
         msg: 'Contraseña invalida o erronea.'
       })
     }
 
+    const token = await generateJWT(user.id)
+
     res.json({
-      msg: 'login ok'
+      user,
+      token
     })
   } catch (error) {
     console.log(error)
