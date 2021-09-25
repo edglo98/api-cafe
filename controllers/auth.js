@@ -2,17 +2,18 @@ import { response } from 'express'
 import User from '../models/user.js'
 import bcryptjs from 'bcryptjs'
 import { generateJWT } from '../helpers/generateJWT.js'
+
 export const login = async (req, res = response) => {
   const { email, password } = req.body
 
   try {
     const user = await User.findOne({ email })
-
     if (!user) {
       return res.status(400).json({
         msg: 'Usuario no encontrado, verifique el correo.'
       })
     }
+
     if (!user.status) {
       return res.status(400).json({
         msg: 'Usuario desahabilitado.'
