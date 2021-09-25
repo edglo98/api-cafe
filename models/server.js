@@ -1,11 +1,15 @@
 import express from 'express'
 import cors from 'cors'
-import routerUser from '../routes/user.js'
 import dbConection from '../database/config.js'
+import routerUser from '../routes/user.js'
+import routerAuth from '../routes/auth.js'
 export class Server {
   constructor () {
     this.port = process.env.PORT
     this.app = express()
+
+    this.usersPath = '/api/users'
+    this.authPath = '/api/auth'
 
     this.conectDB()
 
@@ -24,7 +28,8 @@ export class Server {
   }
 
   routes () {
-    this.app.use('/api/users', routerUser)
+    this.app.use(this.usersPath, routerUser)
+    this.app.use(this.authPath, routerAuth)
   }
 
   async getLocalIp () {
