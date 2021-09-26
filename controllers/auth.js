@@ -40,3 +40,12 @@ export const login = async (req, res = response) => {
     })
   }
 }
+
+export const googleSignIn = async (req, res) => {
+  const { id_token: idToken } = req.body
+
+  res.json({
+    msg: 'Todo bien',
+    idToken
+  })
+}
