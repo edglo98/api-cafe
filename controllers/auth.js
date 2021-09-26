@@ -2,6 +2,7 @@ import { response } from 'express'
 import User from '../models/user.js'
 import bcryptjs from 'bcryptjs'
 import { generateJWT } from '../helpers/generateJWT.js'
+import { googleVerify } from '../helpers/googleValidators.js'
 
 export const login = async (req, res = response) => {
   const { email, password } = req.body
@@ -44,8 +45,40 @@ export const login = async (req, res = response) => {
 export const googleSignIn = async (req, res) => {
   const { id_token: idToken } = req.body
 
-  res.json({
-    msg: 'Todo bien',
-    idToken
-  })
+  try {
+    const { name, email, image } = await googleVerify(idToken)
+
+    let user = await User.findOne({ email })
+
+    if (!user) {
+      const data = {
+        name,
+        email,
+        image,
+        password: '>:(',
+        google: true
+      }
+
+      user = new User(data)
+
+      await user.save()
+    }
+
+    if (!user.status) {
+      return res.status(401).json({
+        msg: 'Usuario inhabilitado.'
+      })
+    }
+
+    const token = await generateJWT(user.id)
+
+    res.json({
+      user,
+      token
+    })
+  } catch (error) {
+    res.status(400).json({
+      msg: 'El token no paso la verificación'
+    })
+  }
 }

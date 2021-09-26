@@ -26,6 +26,10 @@
     data-logo_alignment="left">
   </div>
 
+  <button id='google-signout'>
+    Signout
+  </button>
+
   <script>
     function handleCredentialResponse(response) {
       fetch('http://localhost:8080/api/auth/google',{
@@ -36,8 +40,22 @@
         body: JSON.stringify({ id_token: response.credential})
       })
         .then(res => res.json())
-        .then(res => console.log(res))
+        .then(res => {
+          console.log(res)
+          localStorage.setItem('email', res.user.email)
+        })
         .catch(console.warn)
+    }
+
+    const $button = document.querySelector('#google-signout')
+    $button.onclick = () => {
+      console.log( google.accounts.id )
+      google.accounts.id.disableAutoSelect()
+
+      google.accounts.id.revoke(localStorage.getItem('email'), done => {
+        localStorage.clear()
+        location.reload()
+      })
     }
   </script>
   
