@@ -4,6 +4,7 @@ import { deleteUser, getUser, postUser, putUser } from '../controllers/user.js'
 import { isEmailTaked, isIdOfUser, isValidRole } from '../helpers/dbValidators.js'
 import { validateJWT } from '../middlewares/validateJWT.js'
 import { validateReq } from '../middlewares/validateReq.js'
+import { haveRol, isAdminRol } from '../middlewares/validateRoles.js'
 
 const routerUser = Router()
 
@@ -26,6 +27,8 @@ routerUser.post('/', [
 
 routerUser.delete('/:id', [
   validateJWT,
+  // isAdminRol,
+  haveRol('ADMIN_ROLE', 'SELLS_ROLE'),
   check('id', 'No es un ID válido').isMongoId().custom(isIdOfUser),
   validateReq
 ], deleteUser)
