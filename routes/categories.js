@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
+import { createCategory } from '../controllers/categories.js'
+import { validateJWT } from '../middlewares/validateJWT.js'
 import { validateReq } from '../middlewares/validateReq.js'
 
 const routerCategory = Router()
@@ -13,9 +15,11 @@ routerCategory.get('/:id', (req, res) => {
 })
 
 // privado con cualquier persona con token
-routerCategory.post('/', (req, res) => {
-  res.json('ok ok')
-})
+routerCategory.post('/', [
+  validateJWT,
+  check('name', 'El nombre es obligatorio').not().isEmpty(),
+  validateReq
+], createCategory)
 
 // actualizar privado
 routerCategory.put('/:id', (req, res) => {

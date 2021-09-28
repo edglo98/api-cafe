@@ -4,7 +4,8 @@ const { Schema, model } = pkg
 const CategorySchema = Schema({
   name: {
     type: 'string',
-    require: [true, 'El nombre es obligatorio']
+    require: [true, 'El nombre es obligatorio'],
+    unique: true
   },
   status: {
     type: Boolean,
