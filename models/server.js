@@ -3,13 +3,17 @@ import cors from 'cors'
 import dbConection from '../database/config.js'
 import routerUser from '../routes/user.js'
 import routerAuth from '../routes/auth.js'
+import routerCategory from '../routes/categories.js'
 export class Server {
   constructor () {
     this.port = process.env.PORT
     this.app = express()
 
-    this.usersPath = '/api/users'
-    this.authPath = '/api/auth'
+    this.paths = {
+      auth: '/api/auth',
+      users: '/api/users',
+      categories: '/api/categories'
+    }
 
     this.conectDB()
 
@@ -28,15 +32,16 @@ export class Server {
   }
 
   routes () {
-    this.app.use(this.usersPath, routerUser)
-    this.app.use(this.authPath, routerAuth)
+    this.app.use(this.paths.auth, routerAuth)
+    this.app.use(this.paths.users, routerUser)
+    this.app.use(this.paths.categories, routerCategory)
   }
 
   async getLocalIp () {
     return import('os')
       .then((os) => {
         const networkInterfaces = os.networkInterfaces()
-        return networkInterfaces.en0[1].address
+        return networkInterfaces.en0[0].address
       })
   }
 
