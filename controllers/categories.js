@@ -3,7 +3,7 @@ import Category from '../models/category.js'
 
 export const createCategory = async (req, res = response) => {
   const name = req.body.name.toUpperCase()
-  console.log(name)
+
   const categoryDB = await Category.findOne({ name })
 
   if (categoryDB) {
