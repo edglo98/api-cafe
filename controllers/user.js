@@ -6,6 +6,12 @@ export const getUser = async (req, res = response) => {
   const { limit = 5, from = 0 } = req.query
   const rules = { status: true }
 
+  if (isNaN(Number(limit)) || isNaN(Number(from))) {
+    return res.status(400).json({
+      msg: 'Los parametros limit/from deben ser numeros'
+    })
+  }
+
   const [total, users] = await Promise.all([
     User.countDocuments(rules),
     User.find(rules)
