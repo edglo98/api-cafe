@@ -1,6 +1,11 @@
 import { response } from 'express'
 import Category from '../models/category.js'
 
+const populateUser = {
+  path: 'user',
+  select: '-google_auth -status'
+  // match: { status: true }
+}
 // obtener categorias paginado total populate
 export const getCategories = async (req, res = response) => {
   const rules = { status: true }
@@ -17,11 +22,7 @@ export const getCategories = async (req, res = response) => {
     Category.find(rules)
       .skip(Number(from))
       .limit(Number(limit))
-      .populate({
-        path: 'user',
-        // match: { status: true }
-        select: '-google_auth -status'
-      })
+      .populate(populateUser)
   ])
 
   res.json({
@@ -34,11 +35,7 @@ export const getCategory = async (req, res = response) => {
   const { id } = req.params
 
   const category = await Category.findOne({ id })
-    .populate({
-      path: 'user',
-      select: '-google_auth -status'
-      // match: { status: true }
-    })
+    .populate(populateUser)
 
   res.json(category)
 }
@@ -59,13 +56,25 @@ export const createCategory = async (req, res = response) => {
     user: req.user._id
   }
 
-  const category = new Category(data)
+  let category = new Category(data)
 
   await category.save()
+
+  category = await category.populate(populateUser)
 
   res.status(201).json(category)
 }
 
 // actualizar categoria solo nombre
+export const updateCategory = async (req, res = response) => {
+  const { id } = req.params
+  const { name } = req.body
+
+  const category = await Category
+    .findOneAndUpdate(id, { name }, { new: true })
+    .populate(populateUser)
+
+  res.status(202).json(category)
+}
 
 // borrar categoria- estado en false

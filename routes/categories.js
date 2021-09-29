@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
-import { createCategory, getCategories, getCategory } from '../controllers/categories.js'
+import { createCategory, getCategories, getCategory, updateCategory } from '../controllers/categories.js'
+import { isCategoryTaked, isIdOfCategory } from '../helpers/dbValidators.js'
 import { validateJWT } from '../middlewares/validateJWT.js'
 import { validateReq } from '../middlewares/validateReq.js'
 
@@ -9,7 +10,7 @@ const routerCategory = Router()
 routerCategory.get('/', getCategories)
 
 routerCategory.get('/:id', [
-  check('id', 'El id debe ser un id valida').isMongoId(),
+  check('id', 'El id debe ser un id valida').isMongoId().custom(isIdOfCategory),
   validateReq
 ], getCategory)
 
@@ -21,9 +22,12 @@ routerCategory.post('/', [
 ], createCategory)
 
 // actualizar privado
-routerCategory.put('/:id', (req, res) => {
-  res.json('ok ok')
-})
+routerCategory.put('/:id', [
+  validateJWT,
+  check('id', 'El id debe ser un id valida').isMongoId().custom(isIdOfCategory),
+  check('name', 'El nombre es requerido').not().isEmpty().custom(isCategoryTaked),
+  validateReq
+], updateCategory)
 
 // actualizar privado
 routerCategory.delete('/:id', (req, res) => {
