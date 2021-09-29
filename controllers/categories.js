@@ -17,6 +17,11 @@ export const getCategories = async (req, res = response) => {
     Category.find(rules)
       .skip(Number(from))
       .limit(Number(limit))
+      .populate({
+        path: 'user',
+        // match: { status: true }
+        select: '-google_auth -status'
+      })
   ])
 
   res.json({
