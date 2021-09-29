@@ -78,3 +78,12 @@ export const updateCategory = async (req, res = response) => {
 }
 
 // borrar categoria- estado en false
+export const deleteCategory = async (req, res = response) => {
+  const { id } = req.params
+
+  const category = await Category
+    .findOneAndUpdate(id, { status: false }, { new: true })
+    .populate(populateUser)
+
+  res.status(202).json(category)
+}

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
-import { createCategory, getCategories, getCategory, updateCategory } from '../controllers/categories.js'
+import { createCategory, deleteCategory, getCategories, getCategory, updateCategory } from '../controllers/categories.js'
 import { isCategoryTaked, isIdOfCategory } from '../helpers/dbValidators.js'
 import { validateJWT } from '../middlewares/validateJWT.js'
 import { validateReq } from '../middlewares/validateReq.js'
@@ -30,8 +30,10 @@ routerCategory.put('/:id', [
 ], updateCategory)
 
 // actualizar privado
-routerCategory.delete('/:id', (req, res) => {
-  res.json('ok ok')
-})
+routerCategory.delete('/:id', [
+  validateJWT,
+  check('id', 'El id debe ser un id valida').isMongoId().custom(isIdOfCategory),
+  validateReq
+], deleteCategory)
 
 export default routerCategory
