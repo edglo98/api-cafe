@@ -30,6 +30,18 @@ export const getCategories = async (req, res = response) => {
   })
 }
 // obtener categoria populate {}
+export const getCategory = async (req, res = response) => {
+  const { id } = req.params
+
+  const category = await Category.findOne({ id })
+    .populate({
+      path: 'user',
+      select: '-google_auth -status'
+      // match: { status: true }
+    })
+
+  res.json(category)
+}
 
 export const createCategory = async (req, res = response) => {
   const name = req.body.name.toUpperCase()
