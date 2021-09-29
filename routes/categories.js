@@ -4,6 +4,7 @@ import { createCategory, deleteCategory, getCategories, getCategory, updateCateg
 import { isCategoryTaked, isIdOfCategory } from '../helpers/dbValidators.js'
 import { validateJWT } from '../middlewares/validateJWT.js'
 import { validateReq } from '../middlewares/validateReq.js'
+import { isAdminRol } from '../middlewares/validateRoles.js'
 
 const routerCategory = Router()
 
@@ -32,6 +33,8 @@ routerCategory.put('/:id', [
 // actualizar privado
 routerCategory.delete('/:id', [
   validateJWT,
+  // haveRol('ADMIN_ROLE'),
+  isAdminRol,
   check('id', 'El id debe ser un id valida').isMongoId().custom(isIdOfCategory),
   validateReq
 ], deleteCategory)

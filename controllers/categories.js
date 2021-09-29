@@ -6,7 +6,7 @@ const populateUser = {
   select: '-google_auth -status'
   // match: { status: true }
 }
-// obtener categorias paginado total populate
+
 export const getCategories = async (req, res = response) => {
   const rules = { status: true }
   const { limit = 5, from = 0 } = req.query
@@ -30,7 +30,7 @@ export const getCategories = async (req, res = response) => {
     categories
   })
 }
-// obtener categoria populate {}
+
 export const getCategory = async (req, res = response) => {
   const { id } = req.params
 
@@ -68,10 +68,13 @@ export const createCategory = async (req, res = response) => {
 // actualizar categoria solo nombre
 export const updateCategory = async (req, res = response) => {
   const { id } = req.params
-  const { name } = req.body
+  const { status, user, ...data } = req.body
+
+  data.name = data.name.toUpperCase()
+  data.user = req.user._id
 
   const category = await Category
-    .findOneAndUpdate(id, { name }, { new: true })
+    .findOneAndUpdate(id, data, { new: true })
     .populate(populateUser)
 
   res.status(202).json(category)
@@ -85,5 +88,5 @@ export const deleteCategory = async (req, res = response) => {
     .findOneAndUpdate(id, { status: false }, { new: true })
     .populate(populateUser)
 
-  res.status(202).json(category)
+  res.json(category)
 }
