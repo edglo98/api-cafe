@@ -20,8 +20,8 @@ const CategorySchema = Schema({
 })
 
 CategorySchema.methods.toJSON = function () {
-  const { __v, _id, ...category } = this.toObject()
-  category.uid = _id
+  const { __v, ...category } = this.toObject()
+
   return category
 }
 export default model('Category', CategorySchema)
