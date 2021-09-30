@@ -1,9 +1,10 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
-import { createProduct, getProduct, getProducts, updateProduct } from '../controllers/products.js'
+import { createProduct, deleteProduct, getProduct, getProducts, updateProduct } from '../controllers/products.js'
 import { validateJWT } from '../middlewares/validateJWT.js'
 import { validateReq } from '../middlewares/validateReq.js'
 import { isIdOfCategory, isIdOfProduct, isProductTaked } from '../helpers/dbValidators.js'
+import { isAdminRol } from '../middlewares/validateRoles.js'
 
 const routerProducts = Router()
 
@@ -44,13 +45,14 @@ routerProducts.put('/:id', [
   validateReq
 ], updateProduct)
 
-// // actualizar privado
-// routerProducts.delete('/:id', [
-//   validateJWT,
-//   // haveRol('ADMIN_ROLE'),
-//   isAdminRol,
-//   check('id', 'El id debe ser un id valida').isMongoId().custom(isIdOfProducts),
-//   validateReq
-// ], deleteProducts)
+routerProducts.delete('/:id', [
+  validateJWT,
+  isAdminRol,
+  check('id', 'El id debe ser un id valida')
+    .isMongoId()
+    .bail()
+    .custom(isIdOfProduct),
+  validateReq
+], deleteProduct)
 
 export default routerProducts
