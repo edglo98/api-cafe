@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
-import { createProduct, getProduct, getProducts } from '../controllers/products.js'
+import { createProduct, getProduct, getProducts, updateProduct } from '../controllers/products.js'
 import { validateJWT } from '../middlewares/validateJWT.js'
 import { validateReq } from '../middlewares/validateReq.js'
 import { isIdOfCategory, isIdOfProduct, isProductTaked } from '../helpers/dbValidators.js'
@@ -34,13 +34,15 @@ routerProducts.post('/', [
   validateReq
 ], createProduct)
 
-// // actualizar privado
-// routerProducts.put('/:id', [
-//   validateJWT,
-//   check('id', 'El id debe ser un id valida').isMongoId().custom(isIdOfProducts),
-//   check('name', 'El nombre es requerido').not().isEmpty().custom(isProductsTaked),
-//   validateReq
-// ], updateProducts)
+routerProducts.put('/:id', [
+  validateJWT,
+  check('id', 'El id debe ser un id valida')
+    .isMongoId()
+    .bail()
+    .custom(isIdOfProduct),
+  check('name', 'El nombre es requerido').optional().custom(isProductTaked),
+  validateReq
+], updateProduct)
 
 // // actualizar privado
 // routerProducts.delete('/:id', [

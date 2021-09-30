@@ -55,3 +55,15 @@ export const createProduct = async (req, res = response) => {
 
   res.status(201).json(product)
 }
+
+export const updateProduct = async (req, res = response) => {
+  const { id } = req.params
+  const { status, user, ...data } = req.body
+  data.user = req.user._id
+
+  const product = await Product
+    .findByIdAndUpdate(id, data, { new: true })
+    .populate([populateUser, populateCategory])
+
+  res.status(202).json(product)
+}

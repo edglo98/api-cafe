@@ -73,7 +73,7 @@ export const updateCategory = async (req, res = response) => {
   data.user = req.user._id
 
   const category = await Category
-    .findOneAndUpdate(id, data, { new: true })
+    .findByIdAndUpdate(id, data, { new: true })
     .populate(populateUser)
 
   res.status(202).json(category)
