@@ -1,4 +1,5 @@
 import User from '../models/user.js'
+import Category from '../models/category.js'
 import { response } from 'express'
 import pkg from 'mongoose'
 const { Types } = pkg
@@ -31,6 +32,28 @@ const searchUser = async (term, res = response) => {
   })
 }
 
+const searchCategories = async (term, res = response) => {
+  const isMongoId = Types.ObjectId.isValid(term)
+
+  if (isMongoId) {
+    const category = await Category.findById(term)
+    return res.json({
+      results: category ? [category] : []
+    })
+  }
+
+  const regex = new RegExp(term, 'i')
+  const categories = await Category.find({ name: regex, status: true })
+
+  res.json({
+    results: categories
+  })
+}
+
+const searchProducts = async (term, res = response) => {
+
+}
+
 export const search = (req, res = response) => {
   const { colection, term } = req.params
 
@@ -43,6 +66,12 @@ export const search = (req, res = response) => {
   switch (colection) {
     case 'users':
       searchUser(term, res)
+      break
+    case 'categories':
+      searchCategories(term, res)
+      break
+    case 'products':
+      searchProducts(term, res)
       break
 
     default:
