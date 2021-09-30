@@ -1,8 +1,19 @@
 import User from '../models/user.js'
 import Category from '../models/category.js'
+import Product from '../models/product.js'
 import { response } from 'express'
 import pkg from 'mongoose'
 const { Types } = pkg
+
+const populateUser = {
+  path: 'user',
+  select: '-google_auth -status'
+}
+
+const populateCategory = {
+  path: 'category',
+  select: '-status'
+}
 
 const validColections = [
   'users',
@@ -51,7 +62,28 @@ const searchCategories = async (term, res = response) => {
 }
 
 const searchProducts = async (term, res = response) => {
+  const isMongoId = Types.ObjectId.isValid(term)
 
+  if (isMongoId) {
+    const product = await Product
+      .findById(term)
+      .populate([populateUser, populateCategory])
+    return res.json({
+      results: product ? [product] : []
+    })
+  }
+
+  const regex = new RegExp(term, 'i')
+  const products = await Product
+    .find({
+      $or: [{ name: regex }, { description: regex }],
+      $and: [{ status: true }]
+    })
+    .populate([populateUser, populateCategory])
+
+  res.json({
+    results: products
+  })
 }
 
 export const search = (req, res = response) => {
