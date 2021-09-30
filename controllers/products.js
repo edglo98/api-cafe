@@ -67,3 +67,13 @@ export const updateProduct = async (req, res = response) => {
 
   res.status(202).json(product)
 }
+
+// export const deleteProduct = async (req, res = response) => {
+//   const { id } = req.params
+
+//   const product = await Product
+//     .findOneAndUpdate(id, { status: false }, { new: true })
+//     .populate(populateUser)
+
+//   res.json(product)
+// }

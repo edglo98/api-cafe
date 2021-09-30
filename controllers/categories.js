@@ -83,7 +83,7 @@ export const deleteCategory = async (req, res = response) => {
   const { id } = req.params
 
   const category = await Category
-    .findOneAndUpdate(id, { status: false }, { new: true })
+    .findByIdAndUpdate(id, { status: false }, { new: true })
     .populate(populateUser)
 
   res.json(category)
