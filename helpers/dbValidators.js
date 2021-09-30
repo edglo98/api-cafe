@@ -35,5 +35,5 @@ export const isProductTaked = async (name = '') => {
 
 export const isIdOfProduct = async (id) => {
   const existsProduct = await Product.findById(id)
-  if (!existsProduct) throw new Error(`Categoria no encontrado, verifique el id: ${id}`)
+  if (!existsProduct) throw new Error(`Producto no encontrado, verifique el id: ${id}`)
 }

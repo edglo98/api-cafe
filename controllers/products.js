@@ -34,6 +34,15 @@ export const getProducts = async (req, res = response) => {
   })
 }
 
+export const getProduct = async (req, res = response) => {
+  const { id } = req.params
+
+  const product = await Product.findOne({ _id: id, status: true })
+    .populate([populateUser, populateCategory])
+
+  res.json(product)
+}
+
 export const createProduct = async (req, res = response) => {
   const { status, user, ...data } = req.body
   data.user = req.user._id

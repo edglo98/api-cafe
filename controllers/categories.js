@@ -34,7 +34,7 @@ export const getCategories = async (req, res = response) => {
 export const getCategory = async (req, res = response) => {
   const { id } = req.params
 
-  const category = await Category.findOne({ id })
+  const category = await Category.findOne({ _id: id, status: true })
     .populate(populateUser)
 
   res.json(category)
