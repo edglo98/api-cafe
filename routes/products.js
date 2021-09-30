@@ -1,13 +1,13 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
-import { createProduct } from '../controllers/products.js'
+import { createProduct, getProducts } from '../controllers/products.js'
 import { validateJWT } from '../middlewares/validateJWT.js'
 import { validateReq } from '../middlewares/validateReq.js'
 import { isIdOfCategory, isProductTaked } from '../helpers/dbValidators.js'
 
 const routerProducts = Router()
 
-// routerProducts.get('/', getProducts)
+routerProducts.get('/', getProducts)
 
 // routerProducts.get('/:id', [
 //   check('id', 'El id debe ser un id valida').isMongoId().custom(isIdOfProducts),
