@@ -6,6 +6,8 @@ import routerAuth from '../routes/auth.js'
 import routerCategory from '../routes/categories.js'
 import routerProducts from '../routes/products.js'
 import routerSearch from '../routes/search.js'
+import routerUpload from '../routes/uploads.js'
+import fileUpload from 'express-fileupload'
 export class Server {
   constructor () {
     this.port = process.env.PORT
@@ -16,7 +18,8 @@ export class Server {
       users: '/api/users',
       categories: '/api/categories',
       products: '/api/products',
-      search: '/api/search'
+      search: '/api/search',
+      upload: '/api/upload'
     }
 
     this.conectDB()
@@ -33,6 +36,10 @@ export class Server {
     this.app.use(cors())
     this.app.use(express.json())
     this.app.use(express.static('public'))
+    this.app.use(fileUpload({
+      useTempFiles: true,
+      tempFileDir: '/tmp/'
+    }))
   }
 
   routes () {
@@ -41,6 +48,7 @@ export class Server {
     this.app.use(this.paths.categories, routerCategory)
     this.app.use(this.paths.products, routerProducts)
     this.app.use(this.paths.search, routerSearch)
+    this.app.use(this.paths.upload, routerUpload)
   }
 
   async getLocalIp () {
