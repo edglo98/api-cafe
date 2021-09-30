@@ -5,6 +5,7 @@ const populateUser = {
   path: 'user',
   select: '-google_auth -status'
 }
+
 const populateCategory = {
   path: 'category',
   select: '-status'
