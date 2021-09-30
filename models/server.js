@@ -4,6 +4,7 @@ import dbConection from '../database/config.js'
 import routerUser from '../routes/user.js'
 import routerAuth from '../routes/auth.js'
 import routerCategory from '../routes/categories.js'
+import routerProducts from '../routes/products.js'
 export class Server {
   constructor () {
     this.port = process.env.PORT
@@ -12,7 +13,8 @@ export class Server {
     this.paths = {
       auth: '/api/auth',
       users: '/api/users',
-      categories: '/api/categories'
+      categories: '/api/categories',
+      products: '/api/products'
     }
 
     this.conectDB()
@@ -35,6 +37,7 @@ export class Server {
     this.app.use(this.paths.auth, routerAuth)
     this.app.use(this.paths.users, routerUser)
     this.app.use(this.paths.categories, routerCategory)
+    this.app.use(this.paths.products, routerProducts)
   }
 
   async getLocalIp () {

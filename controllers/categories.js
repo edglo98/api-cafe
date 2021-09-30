@@ -65,7 +65,6 @@ export const createCategory = async (req, res = response) => {
   res.status(201).json(category)
 }
 
-// actualizar categoria solo nombre
 export const updateCategory = async (req, res = response) => {
   const { id } = req.params
   const { status, user, ...data } = req.body
@@ -80,7 +79,6 @@ export const updateCategory = async (req, res = response) => {
   res.status(202).json(category)
 }
 
-// borrar categoria- estado en false
 export const deleteCategory = async (req, res = response) => {
   const { id } = req.params
 

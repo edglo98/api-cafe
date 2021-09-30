@@ -1,6 +1,7 @@
 import Category from '../models/category.js'
 import Role from '../models/role.js'
 import User from '../models/user.js'
+import Product from '../models/product.js'
 
 export const isValidRole = async (rol = '') => {
   const isValidRole = await Role.findOne({ rol })
@@ -25,4 +26,14 @@ export const isIdOfCategory = async (id) => {
 export const isCategoryTaked = async (name = '') => {
   const existsCategory = await Category.findOne({ name })
   if (existsCategory) throw new Error(`La categoria: ${name} ya existe.`)
+}
+
+export const isProductTaked = async (name = '') => {
+  const existsProduct = await Product.findOne({ name })
+  if (existsProduct) throw new Error(`El producto: ${name} ya existe.`)
+}
+
+export const isIdOfProduct = async (id) => {
+  const existsProduct = await Product.findById(id)
+  if (!existsProduct) throw new Error(`Categoria no encontrado, verifique el id: ${id}`)
 }
