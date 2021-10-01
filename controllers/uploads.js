@@ -61,3 +61,40 @@ export const updateAndLoadFile = async (req, res = response) => {
 
   res.json(model)
 }
+
+export const getImages = async (req, res = response) => {
+  const { colection, id } = req.params
+
+  let model
+  switch (colection) {
+    case 'users':
+      model = await User.findById(id)
+      if (!model) {
+        return res.status(400).json({
+          msg: `No exciste un usuario con el id: ${id}`
+        })
+      }
+      break
+    case 'products':
+      model = await Product.findById(id)
+      if (!model) {
+        return res.status(400).json({
+          msg: `No exciste un producto con el id: ${id}`
+        })
+      }
+      break
+
+    default:
+      return res.status(500).json({
+        msg: 'No hay validacion de modelo, error interno'
+      })
+  }
+
+  const imageLocationResponse = model.image
+    ? `../uploads/${colection}/${model.image}`
+    : '../assets/no-image.jpg'
+
+  const { pathname: pathImage } = new URL(imageLocationResponse, import.meta.url)
+
+  res.sendFile(pathImage)
+}

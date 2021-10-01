@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
-import { loadFile, updateAndLoadFile } from '../controllers/uploads.js'
+import { getImages, loadFile, updateAndLoadFile } from '../controllers/uploads.js'
 import { validateColection } from '../helpers/dbValidators.js'
 import { existFile } from '../middlewares/validateFile.js'
 import { validateJWT } from '../middlewares/validateJWT.js'
@@ -21,5 +21,12 @@ routerUpload.put('/:colection/:id', [
   check('colection').custom(colection => validateColection(colection, ['users', 'products'])),
   validateReq
 ], updateAndLoadFile)
+
+routerUpload.get('/:colection/:id', [
+  validateJWT,
+  check('id').isMongoId(),
+  check('colection').custom(colection => validateColection(colection, ['users', 'products'])),
+  validateReq
+], getImages)
 
 export default routerUpload
