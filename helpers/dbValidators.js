@@ -37,3 +37,8 @@ export const isIdOfProduct = async (id) => {
   const existsProduct = await Product.findById(id)
   if (!existsProduct) throw new Error(`Producto no encontrado, verifique el id: ${id}`)
 }
+
+export const validateColection = (colection, validColections = []) => {
+  if (!validColections.includes(colection)) throw new Error(`La colección ${colection} no es permitida, las colecciones permitidas son: ${validColections}`)
+  return true
+}
