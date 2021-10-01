@@ -10,4 +10,9 @@ routerUpload.post('/', [
   validateReq
 ], loadFile)
 
+// routerUpload.put('/:colection/:id', [
+//   validateJWT,
+//   validateReq
+// ], loadFile)
+
 export default routerUpload
